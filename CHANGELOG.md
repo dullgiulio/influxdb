@@ -3,6 +3,9 @@
 ### Bugfixes
 - [#1942](https://github.com/influxdb/influxdb/pull/1942): Sort wildcard names.
 
+### Features
+- [#1936](https://github.com/influxdb/influxdb/pull/1936): Implement "SHOW STATS" and self-monitoring
+
 ## v0.9.0-rc11 [2015-03-13]
 
 ### Bugfixes
