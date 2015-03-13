@@ -35,7 +35,7 @@ func (tx *tx) SetNow(now time.Time) { tx.now = now }
 // CreateMappers will create a set of mappers that need to be run to execute the map phase of a MapReduceJob.
 func (tx *tx) CreateMapReduceJobs(stmt *influxql.SelectStatement, tagKeys []string) ([]*influxql.MapReduceJob, error) {
 	// Parse the source segments.
-	database, policyName, measurement, err := splitIdent(stmt.Source.(*influxql.Measurement).Name)
+	database, policyName, measurement, err := splitIdent(stmt.Sources[0].(*influxql.Measurement).Name)
 	if err != nil {
 		return nil, err
 	}
