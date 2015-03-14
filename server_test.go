@@ -326,7 +326,7 @@ func TestServer_DropDatabase(t *testing.T) {
 	s := OpenServer(NewMessagingClient())
 	defer s.Close()
 
-	// Attempt creating empty name database.
+	// Attempt dropping empty name database.
 	if err := s.DropDatabase(""); err != influxdb.ErrDatabaseNameRequired {
 		t.Fatal("expected error on empty database name")
 	}
