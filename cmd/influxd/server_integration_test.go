@@ -850,7 +850,7 @@ func TestSingleServer(t *testing.T) {
 
 	nodes := createCombinedNodeCluster(t, testName, dir, 1, 8090, nil)
 
-	runTestsData(t, testName, nodes, "mydb", "myrp", 6)
+	runTestsData(t, testName, nodes, "mydb", "myrp", 7)
 }
 
 func Test3NodeServer(t *testing.T) {

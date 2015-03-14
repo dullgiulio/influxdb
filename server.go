@@ -2034,9 +2034,9 @@ func (s *Server) executeSelectStatement(stmt *influxql.SelectStatement, database
 
 // rewriteSelectStatement performs any necessary query re-writing.
 func (s *Server) rewriteSelectStatement(stmt *influxql.SelectStatement) (*influxql.SelectStatement, error) {
-	if !stmt.HasWildcard() {
-		return stmt, nil
-	}
+	// if !stmt.HasWildcard() {
+	// 	return stmt, nil
+	// }
 
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -2071,7 +2071,11 @@ func (s *Server) rewriteSelectStatement(stmt *influxql.SelectStatement) (*influx
 		}
 	}
 
-	return stmt.RewriteWildcards(fields, dimensions), nil
+	if stmt.HasWildcard() {
+		stmt.RewriteWildcards(fields, dimensions)
+	}
+
+	return stmt, nil
 }
 
 // expandSources expands regex sources and removes duplicates.
@@ -2079,12 +2083,14 @@ func (s *Server) expandSources(sources influxql.Sources) (influxql.Sources, erro
 	// Use a map as a set to prevent duplicates. Two regexes might produce
 	// duplicates when expanded.
 	set := map[string]influxql.Source{}
+	fmt.Println("expandSources ^^^^^^^^^^^^^^^^^^^^^^^^^")
 
 	// Iterate all sources, expanding regexes when they're found.
 	for _, source := range sources {
 		switch src := source.(type) {
 		case *influxql.Measurement:
 			if src.Regex == nil {
+				fmt.Println("src.Regex == nil")
 				set[src.Name] = src
 				continue
 			}
@@ -2092,6 +2098,7 @@ func (s *Server) expandSources(sources influxql.Sources) (influxql.Sources, erro
 			// Split out the database & retention policy names.
 			segments, err := influxql.SplitIdent(src.Name)
 			if err != nil {
+				fmt.Println("SplitIdent error")
 				return nil, err
 			}
 
@@ -2796,6 +2803,7 @@ func (s *Server) normalizeStatement(stmt influxql.Statement, defaultDatabase str
 
 	fmt.Printf("stmt.String() = %#v\n", stmt.String())
 	fmt.Printf("normalizeStatement: defaultDatabase = %#v\n", defaultDatabase)
+	//fmt.Printf("+++++++++++++++++++++++++++++++ stmt.Sources[0] = %#v\n", stmt.(*influxql.SelectStatement).Sources[0].(*influxql.Measurement))
 
 	// Qualify all measurements.
 	influxql.WalkFunc(stmt, func(n influxql.Node) {
